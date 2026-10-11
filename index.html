@@ -348,10 +348,11 @@
 
 <script>
 // ============================================================
-//  ⚠️ ВРЕМЕННО: ВЕБХУК ПРЯМО В КОДЕ — ТОЛЬКО ДЛЯ ОТЛАДКИ!
-//  ПЕРЕД ПУБЛИКАЦИЕЙ УБРАТЬ И ЗАМЕНИТЬ НА ПРОКСИ!
+//  НАСТРОЙКИ
+//  Вебхук хранится на сервере (proxy.php), в HTML его нет.
 // ============================================================
-const WEBHOOK = "https://b24-964ige.bitrix24.ru/rest/1/hl905iodvjcekmj8/";
+const PROXY  = "https://api.gmtnsk.ru/proxy.php";
+const APP    = "vacation";
 
 const CATEGORY_ID = 14;
 
@@ -360,7 +361,7 @@ const UF_LEAVE_TYPE = "UF_CRM_1779252668";
 const UF_DURATION   = "UF_CRM_F7874304E1D5B";
 const UF_LEAVE_DATE = "UF_CRM_1779269953";
 
-// Типы отпуска
+// Типы отпуска (ID значений списка из Битрикс24)
 const LEAVE_TYPES = [
   { value: "534", label: "Очередной" },
   { value: "536", label: "Административный" }
@@ -373,46 +374,46 @@ function getUrlParam(name) {
 const URL_UID = getUrlParam("uid").trim();
 
 // ============================================================
-//  Прямой вызов Битрикс24 через вебхук.
-//  JSON передаётся как ?data=... или в теле POST.
+//  Вызов методов Битрикс24 через прокси
 // ============================================================
+const POST_METHODS = [
+  "crm.deal.add",
+  "crm.deal.update",
+  "crm.timeline.comment.add",
+  "tasks.task.add",
+  "tasks.task.update"
+];
+function isPostMethod(method) {
+  return POST_METHODS.indexOf(method) !== -1;
+}
+
 async function b24(method, params = {}) {
-  // Для методов записи используем POST с JSON-телом,
-  // для чтения — GET с query-параметрами.
-  const postMethods = [
-    "crm.deal.add",
-    "crm.deal.update",
-    "crm.timeline.comment.add"
-  ];
-  const usePost = postMethods.indexOf(method) !== -1;
+  const url = new URL(PROXY);
+  url.searchParams.set("app", APP);
+  url.searchParams.set("method", method);
 
-  const base = WEBHOOK + method + (usePost ? ".json" : ".json");
+  const usePost = isPostMethod(method);
 
-  let url, options;
-
-  if (usePost) {
-    url = base;
-    options = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(params)
-    };
-  } else {
-    const u = new URL(base);
+  if (!usePost) {
     for (const [k, v] of Object.entries(params)) {
-      u.searchParams.set(k, typeof v === "object" ? JSON.stringify(v) : v);
+      url.searchParams.set(k, typeof v === "object" ? JSON.stringify(v) : v);
     }
-    url = u.toString();
-    options = { method: "GET" };
   }
 
-  const resp = await fetch(url, options);
+  const response = await fetch(url.toString(), {
+    method: usePost ? "POST" : "GET",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: usePost ? JSON.stringify(params) : undefined
+  });
 
   let data;
   try {
-    data = await resp.json();
+    data = await response.json();
   } catch (e) {
-    throw new Error("HTTP " + resp.status + " — ответ не JSON");
+    throw new Error("HTTP " + response.status + " — ответ не JSON");
   }
 
   if (data && data.error) {
