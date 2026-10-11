@@ -304,13 +304,11 @@
 
     <div class="content">
 
-      <!-- Блок сотрудника -->
       <div class="form-section">
         <h3>👤 Сотрудник</h3>
         <div id="userBox" class="field-hint warn">Определение сотрудника…</div>
       </div>
 
-      <!-- Форма заявления -->
       <div class="form-section">
         <h3>📝 Параметры отпуска</h3>
 
@@ -350,92 +348,71 @@
 
 <script>
 // ============================================================
-//  НАСТРОЙКИ
+//  ⚠️ ВРЕМЕННО: ВЕБХУК ПРЯМО В КОДЕ — ТОЛЬКО ДЛЯ ОТЛАДКИ!
+//  ПЕРЕД ПУБЛИКАЦИЕЙ УБРАТЬ И ЗАМЕНИТЬ НА ПРОКСИ!
 // ============================================================
-const PROXY  = "https://api.gmtnsk.ru/proxy.php"; // ваш прокси, хранящий вебхук
-const APP    = "vacation";                        // имя приложения (пропишите в config.php)
-const PORTAL = "https://b24-964ige.bitrix24.ru";
+const WEBHOOK = "https://b24-964ige.bitrix24.ru/rest/1/hl905iodvjcekmj8/";
 
-const CATEGORY_ID = 14;                           // воронка «Заявление на отпуск»
+const CATEGORY_ID = 14;
 
 // UF-поля сделки
-const UF_LEAVE_TYPE = "UF_CRM_1779252668";        // Тип отпуска (список)
-const UF_DURATION   = "UF_CRM_F7874304E1D5B";     // Длительность
-const UF_LEAVE_DATE = "UF_CRM_1779269953";        // Дата отпуска
+const UF_LEAVE_TYPE = "UF_CRM_1779252668";
+const UF_DURATION   = "UF_CRM_F7874304E1D5B";
+const UF_LEAVE_DATE = "UF_CRM_1779269953";
 
-// ============================================================
-//  Типы отпуска.
-//  ВАЖНО: проверьте ID значений в Битрикс24:
-//    CRM → Настройки → Поля → Сделки → UF_CRM_1779252668
-//  Если значения списка имеют ID, отличные от 1 и 2 —
-//  замените value на реальные ID.
-//  Если поле хранит текст — оставьте как есть.
-// ============================================================
+// Типы отпуска
 const LEAVE_TYPES = [
   { value: "1", label: "Очередной" },
   { value: "2", label: "Административный" }
 ];
 
-// ============================================================
-//  uid сотрудника из URL.
-//  Чат-бот MAX открывает приложение ссылкой вида:
-//     https://ваш-домен/vacation.html?uid=12345
-//  Опционально: &ts=...&sig=... (проверка подписи на прокси)
-// ============================================================
+// uid из URL
 function getUrlParam(name) {
   return new URLSearchParams(window.location.search).get(name) || "";
 }
-
 const URL_UID = getUrlParam("uid").trim();
-const URL_SIG = getUrlParam("sig").trim();
-const URL_TS  = getUrlParam("ts").trim();
 
 // ============================================================
-//  Вызов методов Битрикс24 через прокси
+//  Прямой вызов Битрикс24 через вебхук.
+//  JSON передаётся как ?data=... или в теле POST.
 // ============================================================
-const POST_METHODS = [
-  "crm.deal.add",
-  "crm.deal.update",
-  "crm.timeline.comment.add",
-  "tasks.task.add",
-  "tasks.task.update"
-];
-function isPostMethod(method) {
-  return POST_METHODS.indexOf(method) !== -1;
-}
-
 async function b24(method, params = {}) {
-  const url = new URL(PROXY);
-  url.searchParams.set("app", APP);
-  url.searchParams.set("method", method);
+  // Для методов записи используем POST с JSON-телом,
+  // для чтения — GET с query-параметрами.
+  const postMethods = [
+    "crm.deal.add",
+    "crm.deal.update",
+    "crm.timeline.comment.add"
+  ];
+  const usePost = postMethods.indexOf(method) !== -1;
 
-  if (URL_SIG) {
-    url.searchParams.set("sig", URL_SIG);
-    url.searchParams.set("ts", URL_TS);
-  }
+  const base = WEBHOOK + method + (usePost ? ".json" : ".json");
 
-  const usePost = isPostMethod(method);
+  let url, options;
 
-  if (!usePost) {
+  if (usePost) {
+    url = base;
+    options = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params)
+    };
+  } else {
+    const u = new URL(base);
     for (const [k, v] of Object.entries(params)) {
-      url.searchParams.set(k, typeof v === "object" ? JSON.stringify(v) : v);
+      u.searchParams.set(k, typeof v === "object" ? JSON.stringify(v) : v);
     }
+    url = u.toString();
+    options = { method: "GET" };
   }
 
-  const response = await fetch(url.toString(), {
-    method: usePost ? "POST" : "GET",
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    },
-    body: usePost ? JSON.stringify(params) : undefined
-  });
+  const resp = await fetch(url, options);
 
   let data;
   try {
-    data = await response.json();
+    data = await resp.json();
   } catch (e) {
-    throw new Error("HTTP " + response.status + " — ответ не JSON");
+    throw new Error("HTTP " + resp.status + " — ответ не JSON");
   }
 
   if (data && data.error) {
@@ -497,7 +474,6 @@ function fullName(u) {
 
 // ==== ИНИЦИАЛИЗАЦИЯ ====
 async function init() {
-  // Типы отпуска
   LEAVE_TYPES.forEach(t => {
     const opt = document.createElement("option");
     opt.value = t.value;
@@ -505,7 +481,6 @@ async function init() {
     leaveType.appendChild(opt);
   });
 
-  // Проверка uid
   if (!URL_UID) {
     userBox.className = "field-hint err";
     userBox.textContent =
@@ -515,7 +490,6 @@ async function init() {
     return;
   }
 
-  // Загрузка сотрудника
   try {
     const user = await b24("user.get", { ID: URL_UID });
     if (!user || !user.length) throw new Error("Пользователь не найден");
@@ -530,7 +504,6 @@ async function init() {
     return;
   }
 
-  // Список сотрудников для «Ответственный»
   try {
     const users = await b24("user.get", { ACTIVE: 1 });
     assignedEl.innerHTML = "";
@@ -620,8 +593,8 @@ btnSend.addEventListener("click", async () => {
   const fields = {
     TITLE: title,
     CATEGORY_ID: CATEGORY_ID,
-    ASSIGNED_BY_ID: assignedId,          // Ответственный = создатель сделки
-    CREATED_BY_ID: currentUser.ID,       // Создатель — сам сотрудник
+    ASSIGNED_BY_ID: assignedId,
+    CREATED_BY_ID: currentUser.ID,
     [UF_LEAVE_TYPE]: leaveType.value,
     [UF_DURATION]: parseInt(durationEl.value, 10),
     [UF_LEAVE_DATE]: leaveDate.value
@@ -629,22 +602,6 @@ btnSend.addEventListener("click", async () => {
 
   try {
     const dealId = await b24("crm.deal.add", { fields });
-
-    // ─── Опционально: саммари в таймлайн (раскомментировать, если нужно) ───
-    // const summary = [
-    //   "Заявление на отпуск",
-    //   `Сотрудник: ${fullName(currentUser)} (ID ${currentUser.ID})`,
-    //   `Тип отпуска: ${leaveTypeLabel}`,
-    //   `Длительность: ${durationEl.value} дн.`,
-    //   `Дата начала: ${dateRu}`,
-    //   `Ответственный: ${assignedName}`
-    // ].join("\n");
-    // try {
-    //   await b24("crm.timeline.comment.add", {
-    //     fields: { ENTITY_TYPE: "deal", ENTITY_ID: dealId, COMMENT: summary }
-    //   });
-    // } catch (e) { console.warn("timeline comment failed:", e); }
-    // ──────────────────────────────────────────────────────────────────────
 
     setStatus(
       "ok",
@@ -654,7 +611,6 @@ btnSend.addEventListener("click", async () => {
       "✅"
     );
 
-    // Сброс формы
     leaveType.value = "";
     durationEl.value = "";
     leaveDate.value = "";
@@ -678,7 +634,6 @@ function formatDateRu(iso) {
   return `${d}.${m}.${y}`;
 }
 
-// Запуск
 init();
 </script>
 
