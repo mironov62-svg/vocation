@@ -495,7 +495,7 @@ async function init() {
     if (!user || !user.length) throw new Error("Пользователь не найден");
     currentUser = user[0];
     userBox.className = "field-hint ok";
-    userBox.textContent = `Вы: ${fullName(currentUser)} (ID ${currentUser.ID})`;
+    userBox.textContent = fullName(currentUser);
   } catch (e) {
     userBox.className = "field-hint err";
     userBox.textContent = "Ошибка загрузки сотрудника: " + e.message;
