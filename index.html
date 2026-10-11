@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Заявление на отпуск · ГрандМедТех</title>
+
+<link rel="icon" href="https://mironov62-svg.github.io/SID_DSH/assets/favicon.png" type="image/png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700%7CPoppins:400,500,600,700&display=swap" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --phone: #ffad00;
+    --violet: #9e43fa;
+    --violet-2: #a044ff;
+    --success: #459647;
+    --warn: #f5a623;
+    --danger: #e5484d;
+    --bg: #101010;
+    --bg-panel: rgba(0, 0, 0, 0.45);
+    --text: #ffffff;
+    --text-soft: rgba(255, 255, 255, 0.78);
+    --text-muted: rgba(255, 255, 255, 0.55);
+    --border: rgba(255, 255, 255, 0.12);
+    --radius-xl: 15px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+
+    --grad-header: linear-gradient(272deg, rgb(84, 99, 130) 0%, rgb(92, 66, 131) 98%);
+    --grad-btn: linear-gradient(to right, #6a3093 0%, #a044ff 51%, #6a3093 100%);
+
+    --box-glow: rgb(119 54 222) -1px 11px 35px -20px, rgb(152 62 212) 1px 1px 20px -30px;
+    --transition: all 0.3s ease;
+  }
+
+  body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-size: 14px;
+    background-color: var(--bg);
+    background-image: radial-gradient(circle at 50% 0%, rgba(106, 48, 147, 0.4) 0%, transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+  }
+
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 15px 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 900px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--box-glow);
+    overflow: visible;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--grad-header);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #fff;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  .site-logo img { height: 30px; width: auto; display: block; flex-shrink: 0; }
+
+  .site-logo-text { min-width: 0; overflow: hidden; }
+  .site-logo-text b {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    display: block; line-height: 1.1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .site-logo-text span {
+    font-size: 9px; opacity: 0.8;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    display: block;
+  }
+
+  .site-contacts { text-align: right; flex-shrink: 0; }
+  .site-contacts a {
+    display: block; text-decoration: none; color: #fff;
+    line-height: 1.15; white-space: nowrap;
+  }
+  .site-phone { color: var(--phone); font-weight: 600; font-size: 12px; }
+  .site-mail  { font-size: 10px; opacity: 0.9; }
+
+  .header-block {
+    padding: 12px 20px 12px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .header-block h2 { font-size: 19px; color: #fff; font-weight: 600; }
+
+  .content { padding: 18px 24px 24px; }
+
+  .form-section {
+    margin-bottom: 14px;
+    padding: 14px 18px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+  }
+
+  .form-section h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  label {
+    display: block;
+    font-weight: 500;
+    margin: 8px 0 5px;
+    font-size: 12px;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 9px 12px;
+    background: #fff;
+    border: 1px solid rgba(158, 67, 250, 0.3);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    color: #333;
+    font-family: 'Montserrat', Arial, sans-serif;
+    transition: var(--transition);
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--violet);
+    box-shadow: 0 0 0 2px rgba(158, 67, 250, 0.2);
+  }
+
+  input.err, select.err, textarea.err {
+    border-color: #e5484d;
+    box-shadow: 0 0 0 2px rgba(229, 72, 77, 0.3);
+  }
+
+  .field-hint {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.3;
+    min-height: 16px;
+    color: var(--text-muted);
+  }
+  .field-hint.err  { color: #ff9ea8; font-weight: 600; }
+  .field-hint.ok   { color: #a8e6b0; font-weight: 600; }
+  .field-hint.warn { color: #ffd98a; }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.4px;
+    transition: var(--transition);
+    font-family: 'Montserrat', Arial, sans-serif;
+    background: var(--grad-btn);
+    background-size: 200%;
+    color: white;
+    box-shadow: 0 4px 15px rgba(160, 68, 255, 0.3);
+  }
+
+  button:hover:not(:disabled) { background-position: right; }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  #info {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  #statusBox {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    border: 1px solid transparent;
+  }
+  #statusBox.show { display: flex; }
+  #statusBox.ok {
+    background: rgba(69, 150, 71, 0.15);
+    color: #a8e6b0;
+    border-color: rgba(69, 150, 71, 0.5);
+  }
+  #statusBox.err {
+    background: rgba(220, 53, 69, 0.12);
+    color: #ff9ea8;
+    border-color: rgba(220, 53, 69, 0.5);
+  }
+  #statusBox.warn {
+    background: rgba(245, 166, 35, 0.12);
+    color: #ffd98a;
+    border-color: rgba(245, 166, 35, 0.5);
+  }
+
+  #statusIcon { font-size: 22px; line-height: 1; flex: 0 0 auto; margin-top: -2px; }
+  #statusText { white-space: pre-wrap; flex: 1; }
+
+  .yes { color: #a8e6b0; font-weight: 700; }
+  .no  { color: var(--text-muted); }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 6px 10px; gap: 6px; }
+    .site-logo img { height: 26px; }
+    .site-logo-text b { font-size: 11px; }
+    .site-logo-text span { display: none; }
+    .site-phone { font-size: 11px; }
+    .site-mail { font-size: 9px; }
+    .content { padding: 14px 16px 20px; }
+    .form-section { padding: 12px 14px; }
+  }
+  @media (max-width: 380px) {
+    .site-logo-text b { font-size: 10px; }
+    .site-phone { font-size: 10px; }
+    .site-mail { font-size: 8px; }
+    .site-logo img { height: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="container">
+
+    <header class="site-header">
+      <a class="site-logo" href="https://grandmedtech.ru/" target="_blank">
+        <img src="https://mironov62-svg.github.io/SID_DSH/assets/logo.png" alt="ГрандМедТех">
+        <div class="site-logo-text">
+          <b>ГрандМедТех</b>
+          <span>Сервис медтехники</span>
+        </div>
+      </a>
+      <div class="site-contacts">
+        <a class="site-phone" href="tel:+73833110232">8 (383) 311-02-32</a>
+        <a class="site-mail" href="mailto:gmt@gmt54.ru">gmt@gmt54.ru</a>
+      </div>
+    </header>
+
+    <div class="header-block">
+      <h2>Заявление на отпуск</h2>
+    </div>
+
+    <div class="content">
+
+      <!-- Блок сотрудника -->
+      <div class="form-section">
+        <h3>👤 Сотрудник</h3>
+        <div id="userBox" class="field-hint warn">Определение сотрудника…</div>
+      </div>
+
+      <!-- Форма заявления -->
+      <div class="form-section">
+        <h3>📝 Параметры отпуска</h3>
+
+        <label for="leaveType">Тип отпуска</label>
+        <select id="leaveType">
+          <option value="">— выберите тип —</option>
+        </select>
+        <div class="field-hint" id="leaveTypeHint"></div>
+
+        <label for="duration">Длительность отпуска (дней)</label>
+        <input type="number" id="duration" min="1" max="365" step="1" placeholder="Например: 14">
+        <div class="field-hint" id="durationHint"></div>
+
+        <label for="leaveDate">Дата отпуска</label>
+        <input type="date" id="leaveDate">
+        <div class="field-hint" id="leaveDateHint"></div>
+
+        <label for="assigned">Ответственный</label>
+        <select id="assigned">
+          <option value="">— загрузка сотрудников —</option>
+        </select>
+        <div class="field-hint" id="assignedHint">По умолчанию — вы (создатель сделки).</div>
+      </div>
+
+      <div class="button-group">
+        <button id="btnSend" type="button">Сформировать заявление на отпуск</button>
+      </div>
+
+      <div id="statusBox">
+        <div id="statusIcon"></div>
+        <div id="statusText"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  НАСТРОЙКИ
+// ============================================================
+const PROXY  = "https://api.gmtnsk.ru/proxy.php"; // ваш прокси, хранящий вебхук
+const APP    = "vacation";                        // имя приложения (пропишите в config.php)
+const PORTAL = "https://b24-964ige.bitrix24.ru";
+
+const CATEGORY_ID = 14;                           // воронка «Заявление на отпуск»
+
+// UF-поля сделки
+const UF_LEAVE_TYPE = "UF_CRM_1779252668";        // Тип отпуска (список)
+const UF_DURATION   = "UF_CRM_F7874304E1D5B";     // Длительность
+const UF_LEAVE_DATE = "UF_CRM_1779269953";        // Дата отпуска
+
+// ============================================================
+//  Типы отпуска.
+//  ВАЖНО: проверьте ID значений в Битрикс24:
+//    CRM → Настройки → Поля → Сделки → UF_CRM_1779252668
+//  Если значения списка имеют ID, отличные от 1 и 2 —
+//  замените value на реальные ID.
+//  Если поле хранит текст — оставьте как есть.
+// ============================================================
+const LEAVE_TYPES = [
+  { value: "1", label: "Очередной" },
+  { value: "2", label: "Административный" }
+];
+
+// ============================================================
+//  uid сотрудника из URL.
+//  Чат-бот MAX открывает приложение ссылкой вида:
+//     https://ваш-домен/vacation.html?uid=12345
+//  Опционально: &ts=...&sig=... (проверка подписи на прокси)
+// ============================================================
+function getUrlParam(name) {
+  return new URLSearchParams(window.location.search).get(name) || "";
+}
+
+const URL_UID = getUrlParam("uid").trim();
+const URL_SIG = getUrlParam("sig").trim();
+const URL_TS  = getUrlParam("ts").trim();
+
+// ============================================================
+//  Вызов методов Битрикс24 через прокси
+// ============================================================
+const POST_METHODS = [
+  "crm.deal.add",
+  "crm.deal.update",
+  "crm.timeline.comment.add",
+  "tasks.task.add",
+  "tasks.task.update"
+];
+function isPostMethod(method) {
+  return POST_METHODS.indexOf(method) !== -1;
+}
+
+async function b24(method, params = {}) {
+  const url = new URL(PROXY);
+  url.searchParams.set("app", APP);
+  url.searchParams.set("method", method);
+
+  if (URL_SIG) {
+    url.searchParams.set("sig", URL_SIG);
+    url.searchParams.set("ts", URL_TS);
+  }
+
+  const usePost = isPostMethod(method);
+
+  if (!usePost) {
+    for (const [k, v] of Object.entries(params)) {
+      url.searchParams.set(k, typeof v === "object" ? JSON.stringify(v) : v);
+    }
+  }
+
+  const response = await fetch(url.toString(), {
+    method: usePost ? "POST" : "GET",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: usePost ? JSON.stringify(params) : undefined
+  });
+
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    throw new Error("HTTP " + response.status + " — ответ не JSON");
+  }
+
+  if (data && data.error) {
+    const msg = data.error_description
+      ? `${data.error}: ${data.error_description}`
+      : data.error;
+    throw new Error(msg);
+  }
+
+  return data.result;
+}
+
+// ==== ЭЛЕМЕНТЫ ====
+const $ = id => document.getElementById(id);
+const userBox      = $("userBox");
+const leaveType    = $("leaveType");
+const durationEl   = $("duration");
+const leaveDate    = $("leaveDate");
+const assignedEl   = $("assigned");
+const btnSend      = $("btnSend");
+const statusBox    = $("statusBox");
+const statusIcon   = $("statusIcon");
+const statusText   = $("statusText");
+
+let currentUser = null;
+let isSending = false;
+
+// ==== ХЕЛПЕРЫ ====
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function setStatus(kind, html, icon) {
+  if (!html) {
+    statusBox.className = "";
+    statusText.innerHTML = "";
+    statusIcon.textContent = "";
+    return;
+  }
+  statusBox.className = "show " + kind;
+  statusIcon.textContent = icon || (kind === "ok" ? "✅" : kind === "warn" ? "⚠️" : "❗");
+  statusText.innerHTML = html;
+}
+
+function setHint(el, kind, text) {
+  el.classList.remove("ok", "err", "warn");
+  if (kind) el.classList.add(kind);
+  el.textContent = text || "";
+}
+
+function fullName(u) {
+  if (!u) return "";
+  const parts = [u.LAST_NAME, u.NAME, u.SECOND_NAME].filter(Boolean);
+  return parts.join(" ").trim() || `ID ${u.ID}`;
+}
+
+// ==== ИНИЦИАЛИЗАЦИЯ ====
+async function init() {
+  // Типы отпуска
+  LEAVE_TYPES.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t.value;
+    opt.textContent = t.label;
+    leaveType.appendChild(opt);
+  });
+
+  // Проверка uid
+  if (!URL_UID) {
+    userBox.className = "field-hint err";
+    userBox.textContent =
+      "Не удалось определить сотрудника. Откройте приложение из личного кабинета бота.";
+    setStatus("err", "Сотрудник не определён. Откройте приложение из личного кабинета бота.", "❗");
+    btnSend.disabled = true;
+    return;
+  }
+
+  // Загрузка сотрудника
+  try {
+    const user = await b24("user.get", { ID: URL_UID });
+    if (!user || !user.length) throw new Error("Пользователь не найден");
+    currentUser = user[0];
+    userBox.className = "field-hint ok";
+    userBox.textContent = `Вы: ${fullName(currentUser)} (ID ${currentUser.ID})`;
+  } catch (e) {
+    userBox.className = "field-hint err";
+    userBox.textContent = "Ошибка загрузки сотрудника: " + e.message;
+    setStatus("err", "Не удалось загрузить данные сотрудника: " + escapeHtml(e.message), "❗");
+    btnSend.disabled = true;
+    return;
+  }
+
+  // Список сотрудников для «Ответственный»
+  try {
+    const users = await b24("user.get", { ACTIVE: 1 });
+    assignedEl.innerHTML = "";
+    users
+      .sort((a, b) => fullName(a).localeCompare(fullName(b), "ru"))
+      .forEach(u => {
+        const opt = document.createElement("option");
+        opt.value = String(u.ID);
+        opt.textContent = fullName(u);
+        assignedEl.appendChild(opt);
+      });
+    assignedEl.value = String(currentUser.ID);
+  } catch (e) {
+    assignedEl.innerHTML = "";
+    const opt = document.createElement("option");
+    opt.value = String(currentUser.ID);
+    opt.textContent = fullName(currentUser);
+    assignedEl.appendChild(opt);
+  }
+
+  setStatus("warn", "Заполните параметры отпуска и нажмите кнопку.", "⚠️");
+}
+
+// ==== ВАЛИДАЦИЯ ====
+function validate() {
+  let ok = true;
+
+  setHint($("leaveTypeHint"), null, "");
+  setHint($("durationHint"), null, "");
+  setHint($("leaveDateHint"), null, "");
+  leaveType.classList.remove("err");
+  durationEl.classList.remove("err");
+  leaveDate.classList.remove("err");
+
+  if (!leaveType.value) {
+    setHint($("leaveTypeHint"), "err", "Выберите тип отпуска");
+    leaveType.classList.add("err");
+    ok = false;
+  }
+
+  const d = parseInt(durationEl.value, 10);
+  if (!Number.isFinite(d) || d < 1 || d > 365) {
+    setHint($("durationHint"), "err", "Укажите число дней от 1 до 365");
+    durationEl.classList.add("err");
+    ok = false;
+  }
+
+  if (!leaveDate.value) {
+    setHint($("leaveDateHint"), "err", "Выберите дату начала отпуска");
+    leaveDate.classList.add("err");
+    ok = false;
+  }
+
+  if (!assignedEl.value) {
+    setStatus("err", "Не выбран ответственный", "❗");
+    ok = false;
+  }
+
+  return ok;
+}
+
+// ==== ОТПРАВКА ====
+btnSend.addEventListener("click", async () => {
+  if (isSending) return;
+  if (!currentUser) {
+    setStatus("err", "Сотрудник не определён", "❗");
+    return;
+  }
+  if (!validate()) {
+    setStatus("err", "Проверьте заполнение полей", "❗");
+    return;
+  }
+
+  isSending = true;
+  btnSend.disabled = true;
+  setStatus("warn", "Создание сделки…", "⏳");
+
+  const leaveTypeLabel =
+    LEAVE_TYPES.find(t => t.value === leaveType.value)?.label || leaveType.value;
+
+  const dateRu = formatDateRu(leaveDate.value);
+  const assignedId = parseInt(assignedEl.value, 10);
+  const assignedName = assignedEl.options[assignedEl.selectedIndex].textContent;
+
+  const title = `Заявление на отпуск — ${fullName(currentUser)}`;
+
+  const fields = {
+    TITLE: title,
+    CATEGORY_ID: CATEGORY_ID,
+    ASSIGNED_BY_ID: assignedId,          // Ответственный = создатель сделки
+    CREATED_BY_ID: currentUser.ID,       // Создатель — сам сотрудник
+    [UF_LEAVE_TYPE]: leaveType.value,
+    [UF_DURATION]: parseInt(durationEl.value, 10),
+    [UF_LEAVE_DATE]: leaveDate.value
+  };
+
+  try {
+    const dealId = await b24("crm.deal.add", { fields });
+
+    // ─── Опционально: саммари в таймлайн (раскомментировать, если нужно) ───
+    // const summary = [
+    //   "Заявление на отпуск",
+    //   `Сотрудник: ${fullName(currentUser)} (ID ${currentUser.ID})`,
+    //   `Тип отпуска: ${leaveTypeLabel}`,
+    //   `Длительность: ${durationEl.value} дн.`,
+    //   `Дата начала: ${dateRu}`,
+    //   `Ответственный: ${assignedName}`
+    // ].join("\n");
+    // try {
+    //   await b24("crm.timeline.comment.add", {
+    //     fields: { ENTITY_TYPE: "deal", ENTITY_ID: dealId, COMMENT: summary }
+    //   });
+    // } catch (e) { console.warn("timeline comment failed:", e); }
+    // ──────────────────────────────────────────────────────────────────────
+
+    setStatus(
+      "ok",
+      `✅ Заявление сформировано.<br>Сделка <b>№${escapeHtml(String(dealId))}</b> создана в воронке «Заявление на отпуск».<br>` +
+      `Тип: ${escapeHtml(leaveTypeLabel)}, ${durationEl.value} дн., с ${escapeHtml(dateRu)}.<br>` +
+      `Ответственный: ${escapeHtml(assignedName)}`,
+      "✅"
+    );
+
+    // Сброс формы
+    leaveType.value = "";
+    durationEl.value = "";
+    leaveDate.value = "";
+    assignedEl.value = String(currentUser.ID);
+    $("leaveTypeHint").textContent = "";
+    $("durationHint").textContent = "";
+    $("leaveDateHint").textContent = "";
+
+  } catch (err) {
+    console.error(err);
+    setStatus("err", "Ошибка создания сделки: " + escapeHtml(err.message), "❗");
+  } finally {
+    isSending = false;
+    btnSend.disabled = false;
+  }
+});
+
+function formatDateRu(iso) {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-");
+  return `${d}.${m}.${y}`;
+}
+
+// Запуск
+init();
+</script>
+
+</body>
+</html>
